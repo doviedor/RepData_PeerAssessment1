@@ -5,9 +5,7 @@ date: "November 2, 2017"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 
 ## Introduction
@@ -20,27 +18,175 @@ This assignment makes use of data from a personal activity monitoring device. Th
 
 ### Setup
 
-```{r}
+
+```r
 library(ggplot2)
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 3.4.1
+```
+
+```r
 library(knitr)
 library(plyr)
 library(dplyr)
+```
+
+```
+## Warning: package 'dplyr' was built under R version 3.4.1
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:plyr':
+## 
+##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+##     summarize
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(lubridate)
+```
+
+```
+## Warning: package 'lubridate' was built under R version 3.4.1
+```
+
+```
+## 
+## Attaching package: 'lubridate'
+```
+
+```
+## The following object is masked from 'package:plyr':
+## 
+##     here
+```
+
+```
+## The following object is masked from 'package:base':
+## 
+##     date
+```
+
+```r
 library(tidyverse)
+```
+
+```
+## Warning: package 'tidyverse' was built under R version 3.4.1
+```
+
+```
+## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr
+```
+
+```
+## Warning: package 'tibble' was built under R version 3.4.1
+```
+
+```
+## Warning: package 'readr' was built under R version 3.4.1
+```
+
+```
+## Warning: package 'purrr' was built under R version 3.4.1
+```
+
+```
+## Conflicts with tidy packages ----------------------------------------------
+```
+
+```
+## arrange():     dplyr, plyr
+## as.difftime(): lubridate, base
+## compact():     purrr, plyr
+## complete():    tidyr, .GlobalEnv
+## count():       dplyr, plyr
+## date():        lubridate, base
+## failwith():    dplyr, plyr
+## filter():      dplyr, stats
+## here():        lubridate, plyr
+## id():          dplyr, plyr
+## intersect():   lubridate, base
+## lag():         dplyr, stats
+## mutate():      dplyr, plyr
+## rename():      dplyr, plyr
+## setdiff():     lubridate, base
+## summarise():   dplyr, plyr
+## summarize():   dplyr, plyr
+## union():       lubridate, base
+```
+
+```r
 library(ggthemes)
+```
+
+```
+## Warning: package 'ggthemes' was built under R version 3.4.2
+```
+
+```r
 library(zoo)
+```
+
+```
+## Warning: package 'zoo' was built under R version 3.4.1
+```
+
+```
+## 
+## Attaching package: 'zoo'
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+```
+
+```r
 library(gridExtra)
+```
 
+```
+## 
+## Attaching package: 'gridExtra'
+```
 
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
 ```
 
 
 
 ### 1. Code for reading in the dataset and/or processing the data and process the column as Date
-```{r}
+
+```r
 project1 <- read.csv2("activity.csv", header = TRUE, sep = ",")
 project1$date <- ymd(project1$date)
-
 ```
 
 
@@ -51,7 +197,8 @@ project1$date <- ymd(project1$date)
 3. The third steep is to make the Histogram, in this case using GGPlot2
 
 
-```{r}
+
+```r
 Steps <- aggregate(project1$steps ~ project1$date, FUN = sum)
 colnames(Steps) <- c("Date", "Steps")
 
@@ -60,8 +207,13 @@ ggplot(Steps, aes(x = Steps)) +
   theme_economist() + 
   labs(y = "Frequency") + 
   ggtitle("Hist of Steps")
+```
 
 ```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 
 
@@ -69,10 +221,21 @@ ggplot(Steps, aes(x = Steps)) +
 
 The values for mean and median are:
 
-```{r}
-mean(Steps$Steps)
-median(Steps$Steps)
 
+```r
+mean(Steps$Steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+median(Steps$Steps)
+```
+
+```
+## [1] 10765
 ```
 
 
@@ -81,7 +244,8 @@ median(Steps$Steps)
 
 These are the time plots using the base and ggplot2
 
-```{r}
+
+```r
 daily_act <- project1 %>% filter(!is.na(steps))
 steps_inter <- aggregate(steps ~ interval, daily_act, mean)
 
@@ -89,20 +253,25 @@ interval_wmax <- steps_inter[which.max(steps_inter$steps),1]
 interval_value <- steps_inter[which.max(steps_inter$steps),2]
 
 plot(steps_inter$interval, steps_inter$steps, type = "l", xlab = "Interval", ylab = "QTY of Steps", main = "Steps by Interval")
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
+
+```r
 ggplot(steps_inter, aes(x = interval, y = steps))+geom_line()+theme_economist()+labs(x = "Interval", y = "Qty of Steps")+ggtitle("Steps by Interval")+
     geom_text(aes(label = paste("Max Value :", as.character(interval_wmax), ",", as.character(interval_value), sep = " ")), x = interval_wmax, y = interval_value)
-
 ```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-2.png)
 
 
 
 ### 5. Find interval with most average steps.
 
-```{r}
+
+```r
 interval_wmax <- steps_inter[which.max(steps_inter$steps),1]
 interval_value <- steps_inter[which.max(steps_inter$steps),2]
-
-
 ```
 
 
@@ -113,10 +282,14 @@ interval_value <- steps_inter[which.max(steps_inter$steps),2]
 
 ### 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs).
 
-```{r}
+
+```r
 nas <- sum(is.na(project1$steps))
 paste("The total of NA's in the data are", nas, sep = " ")
+```
 
+```
+## [1] "The total of NA's in the data are 2304"
 ```
 
 
@@ -128,7 +301,8 @@ My first strategy was to use a IF condition to replace the Days with Steps = NA 
 
 ### 3.- Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
-```{r}
+
+```r
 project_wo_nas <- project1
 nas_steps <- is.na(project_wo_nas$steps)
 data_to_fill_nas <- tapply(project_wo_nas$steps, project_wo_nas$interval, mean, na.rm=TRUE, simplify=TRUE)
@@ -139,8 +313,8 @@ project_wo_nas$steps[nas_steps] <- data_to_fill_nas[as.character(project_wo_nas$
 
 ### 4.Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. 
 
-```{r}
 
+```r
 summ_wo_nas <- project_wo_nas %>% group_by(date) %>% summarize(steps = sum(steps))
 
 ggplot(summ_wo_nas, aes(x = steps)) + 
@@ -148,10 +322,28 @@ ggplot(summ_wo_nas, aes(x = steps)) +
   theme_economist() + 
   labs(y = "Frequency") + 
   ggtitle("Hist of Steps without NA's")
+```
 
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png)
+
+```r
 mean(summ_wo_nas$steps)
-median(summ_wo_nas$steps)
+```
 
+```
+## [1] 10766.19
+```
+
+```r
+median(summ_wo_nas$steps)
+```
+
+```
+## [1] 10766.19
 ```
 
 
@@ -173,8 +365,8 @@ The new data came from the mean of the existing data, that is the reason that bo
 As we can see in the graphs, the activity during the workday is greater that during the weekends.
 
 
-```{r}
 
+```r
 data_with_day <- project_wo_nas
 days_name <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
 data_with_day$day <- c('Weekend', 'Weekday')[(weekdays(data_with_day$date) %in% days_name)+1L]
@@ -188,7 +380,11 @@ ggplot(data_by_day, aes(x = interval, y = steps, color = day)) +
   theme_economist() + 
   labs(y = "Frequency") + 
   ggtitle("Weekday vs. Weekend")
+```
 
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png)
+
+```r
 plot2 <- ggplot(data_by_day_wd, aes(x = interval, y = steps)) + 
   geom_line() + 
   theme_economist() + 
@@ -202,5 +398,6 @@ plot3 <- ggplot(data_by_day_wk, aes(x = interval, y = steps)) +
   ggtitle("Steps Weekend")
 
 grid.arrange(plot2, plot3, ncol = 1)
-
 ```
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-2.png)
