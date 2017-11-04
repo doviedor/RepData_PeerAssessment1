@@ -21,166 +21,17 @@ This assignment makes use of data from a personal activity monitoring device. Th
 
 ```r
 library(ggplot2)
-```
-
-```
-## Warning: package 'ggplot2' was built under R version 3.4.1
-```
-
-```r
 library(knitr)
 library(plyr)
 library(dplyr)
-```
-
-```
-## Warning: package 'dplyr' was built under R version 3.4.1
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-```
-
-```
-## The following objects are masked from 'package:plyr':
-## 
-##     arrange, count, desc, failwith, id, mutate, rename, summarise,
-##     summarize
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(lubridate)
-```
-
-```
-## Warning: package 'lubridate' was built under R version 3.4.1
-```
-
-```
-## 
-## Attaching package: 'lubridate'
-```
-
-```
-## The following object is masked from 'package:plyr':
-## 
-##     here
-```
-
-```
-## The following object is masked from 'package:base':
-## 
-##     date
-```
-
-```r
 library(tidyverse)
-```
-
-```
-## Warning: package 'tidyverse' was built under R version 3.4.1
-```
-
-```
-## Loading tidyverse: tibble
-## Loading tidyverse: tidyr
-## Loading tidyverse: readr
-## Loading tidyverse: purrr
-```
-
-```
-## Warning: package 'tibble' was built under R version 3.4.1
-```
-
-```
-## Warning: package 'readr' was built under R version 3.4.1
-```
-
-```
-## Warning: package 'purrr' was built under R version 3.4.1
-```
-
-```
-## Conflicts with tidy packages ----------------------------------------------
-```
-
-```
-## arrange():     dplyr, plyr
-## as.difftime(): lubridate, base
-## compact():     purrr, plyr
-## complete():    tidyr, .GlobalEnv
-## count():       dplyr, plyr
-## date():        lubridate, base
-## failwith():    dplyr, plyr
-## filter():      dplyr, stats
-## here():        lubridate, plyr
-## id():          dplyr, plyr
-## intersect():   lubridate, base
-## lag():         dplyr, stats
-## mutate():      dplyr, plyr
-## rename():      dplyr, plyr
-## setdiff():     lubridate, base
-## summarise():   dplyr, plyr
-## summarize():   dplyr, plyr
-## union():       lubridate, base
-```
-
-```r
 library(ggthemes)
-```
-
-```
-## Warning: package 'ggthemes' was built under R version 3.4.2
-```
-
-```r
 library(zoo)
-```
-
-```
-## Warning: package 'zoo' was built under R version 3.4.1
-```
-
-```
-## 
-## Attaching package: 'zoo'
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     as.Date, as.Date.numeric
-```
-
-```r
 library(gridExtra)
 ```
 
-```
-## 
-## Attaching package: 'gridExtra'
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     combine
-```
-
-
+<br/>
 
 ### 1. Code for reading in the dataset and/or processing the data and process the column as Date
 
@@ -189,7 +40,7 @@ project1 <- read.csv2("activity.csv", header = TRUE, sep = ",")
 project1$date <- ymd(project1$date)
 ```
 
-
+<br/>
 
 ### 2. Data to graph
 1. The first steep is to make the sum of the steps using date as index.
@@ -206,7 +57,7 @@ ggplot(Steps, aes(x = Steps)) +
   geom_histogram(stat = "bin") + 
   theme_economist() + 
   labs(y = "Frequency") + 
-  ggtitle("Hist of Steps")
+  ggtitle("Hist of Steps taken each day")
 ```
 
 ```
@@ -214,7 +65,9 @@ ggplot(Steps, aes(x = Steps)) +
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
-
+    
+      
+<br/>        
 
 
 ### 3. Mean and median number of steps taken each day
@@ -223,22 +76,13 @@ The values for mean and median are:
 
 
 ```r
-mean(Steps$Steps)
+Steps_mean <- mean(Steps$Steps)
+Steps_median <- median(Steps$Steps)
 ```
+The mean of the steps taken each day is 1.0766189 &times; 10<sup>4</sup>  
+The median of the steps taken each day is 10765
 
-```
-## [1] 10766.19
-```
-
-```r
-median(Steps$Steps)
-```
-
-```
-## [1] 10765
-```
-
-
+<br/>
 
 ### 4. Time series plot of the average number of steps taken
 
@@ -264,7 +108,7 @@ ggplot(steps_inter, aes(x = interval, y = steps))+geom_line()+theme_economist()+
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-2.png)
 
-
+<br/>
 
 ### 5. Find interval with most average steps.
 
@@ -274,7 +118,9 @@ interval_wmax <- steps_inter[which.max(steps_inter$steps),1]
 interval_value <- steps_inter[which.max(steps_inter$steps),2]
 ```
 
+The interval with the most average steps is the 835 with an average of 206.1698113
 
+<br/>  
 
 
 
@@ -292,11 +138,16 @@ paste("The total of NA's in the data are", nas, sep = " ")
 ## [1] "The total of NA's in the data are 2304"
 ```
 
+The total of NA's in the data are 2304
 
+<br/>
 
 ### 2.- Devise a strategy for filling in all of the missing values in the dataset. 
-My first strategy was to use a IF condition to replace the Days with Steps = NA but it did not fit what I was looking for.
+My first strategy was to use a IF condition to replace the Days with Steps = NA but it did not fit what I was looking for.  
+Then, I tried using the median value, but the result has a significant difference with the original.  
+As the last option, I used the mean of the steps indexed by the interval.
 
+<br/>  
 
 
 ### 3.- Create a new dataset that is equal to the original dataset but with the missing data filled in.
@@ -309,6 +160,7 @@ data_to_fill_nas <- tapply(project_wo_nas$steps, project_wo_nas$interval, mean, 
 project_wo_nas$steps[nas_steps] <- data_to_fill_nas[as.character(project_wo_nas$interval[nas_steps])]
 ```
 
+<br/>  
 
 
 ### 4.Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. 
@@ -331,33 +183,25 @@ ggplot(summ_wo_nas, aes(x = steps)) +
 ![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png)
 
 ```r
-mean(summ_wo_nas$steps)
+Step_mean_wona <- mean(summ_wo_nas$steps)
+Step_median_wona <- median(summ_wo_nas$steps)
 ```
+The mean of the new data without NA's is 1.0766189 &times; 10<sup>4</sup> and the median is 1.0766189 &times; 10<sup>4</sup>.
 
-```
-## [1] 10766.19
-```
-
-```r
-median(summ_wo_nas$steps)
-```
-
-```
-## [1] 10766.19
-```
-
-
+<br/>  
 
 ### 5.Do these values differ from the estimates from the first part of the assignment? 
 
 The mean and the median with the new data is equal but comparing the new data against the old data, we can see that the mean is the same but the median is different.
 
+<br/>  
 
 
 ### 6.What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 The new data came from the mean of the existing data, that is the reason that both mean's are the same but this is not the case with the median. We need to verify using the median insted of the mean to fill the data frame.
 
+<br/>  
 
 
 ### 7.Are there differences in activity patterns between weekdays and weekends?

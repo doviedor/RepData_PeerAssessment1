@@ -34,7 +34,7 @@ library(gridExtra)
 
 ```
 
-
+<br/>
 
 ### 1. Code for reading in the dataset and/or processing the data and process the column as Date
 ```{r}
@@ -43,7 +43,7 @@ project1$date <- ymd(project1$date)
 
 ```
 
-
+<br/>
 
 ### 2. Data to graph
 1. The first steep is to make the sum of the steps using date as index.
@@ -59,10 +59,12 @@ ggplot(Steps, aes(x = Steps)) +
   geom_histogram(stat = "bin") + 
   theme_economist() + 
   labs(y = "Frequency") + 
-  ggtitle("Hist of Steps")
+  ggtitle("Hist of Steps taken each day")
 
 ```
-
+    
+      
+<br/>        
 
 
 ### 3. Mean and median number of steps taken each day
@@ -70,12 +72,14 @@ ggplot(Steps, aes(x = Steps)) +
 The values for mean and median are:
 
 ```{r}
-mean(Steps$Steps)
-median(Steps$Steps)
+Steps_mean <- mean(Steps$Steps)
+Steps_median <- median(Steps$Steps)
 
 ```
+The mean of the steps taken each day is `r Steps_mean`  
+The median of the steps taken each day is `r Steps_median`
 
-
+<br/>
 
 ### 4. Time series plot of the average number of steps taken
 
@@ -94,7 +98,7 @@ ggplot(steps_inter, aes(x = interval, y = steps))+geom_line()+theme_economist()+
 
 ```
 
-
+<br/>
 
 ### 5. Find interval with most average steps.
 
@@ -105,7 +109,9 @@ interval_value <- steps_inter[which.max(steps_inter$steps),2]
 
 ```
 
+The interval with the most average steps is the `r interval_wmax` with an average of `r interval_value`
 
+<br/>  
 
 
 
@@ -119,11 +125,16 @@ paste("The total of NA's in the data are", nas, sep = " ")
 
 ```
 
+The total of NA's in the data are `r nas`
 
+<br/>
 
 ### 2.- Devise a strategy for filling in all of the missing values in the dataset. 
-My first strategy was to use a IF condition to replace the Days with Steps = NA but it did not fit what I was looking for.
+My first strategy was to use a IF condition to replace the Days with Steps = NA but it did not fit what I was looking for.  
+Then, I tried using the median value, but the result has a significant difference with the original.  
+As the last option, I used the mean of the steps indexed by the interval.
 
+<br/>  
 
 
 ### 3.- Create a new dataset that is equal to the original dataset but with the missing data filled in.
@@ -135,6 +146,7 @@ data_to_fill_nas <- tapply(project_wo_nas$steps, project_wo_nas$interval, mean, 
 project_wo_nas$steps[nas_steps] <- data_to_fill_nas[as.character(project_wo_nas$interval[nas_steps])]
 ```
 
+<br/>  
 
 
 ### 4.Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. 
@@ -149,23 +161,26 @@ ggplot(summ_wo_nas, aes(x = steps)) +
   labs(y = "Frequency") + 
   ggtitle("Hist of Steps without NA's")
 
-mean(summ_wo_nas$steps)
-median(summ_wo_nas$steps)
+Step_mean_wona <- mean(summ_wo_nas$steps)
+Step_median_wona <- median(summ_wo_nas$steps)
 
 ```
+The mean of the new data without NA's is `r Step_mean_wona` and the median is `r Step_median_wona`.
 
-
+<br/>  
 
 ### 5.Do these values differ from the estimates from the first part of the assignment? 
 
 The mean and the median with the new data is equal but comparing the new data against the old data, we can see that the mean is the same but the median is different.
 
+<br/>  
 
 
 ### 6.What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 The new data came from the mean of the existing data, that is the reason that both mean's are the same but this is not the case with the median. We need to verify using the median insted of the mean to fill the data frame.
 
+<br/>  
 
 
 ### 7.Are there differences in activity patterns between weekdays and weekends?
